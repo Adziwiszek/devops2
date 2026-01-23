@@ -1,8 +1,17 @@
+BUILD_DIR := build
+
 make:
-	g++ main.cpp -o main
+	@if [ ! -d "$(BUILD_DIR)" ]; then \
+		cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+	else \
+	fi
+	cmake --build build
 
 clean:
-	rm main
+	rm -rf build/
+
+test:
+	@ ./build/CalculatorTests
 
 run:
-	@ ./main
+	@ ./build/calculator_app
