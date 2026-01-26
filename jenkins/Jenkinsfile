@@ -39,8 +39,11 @@ spec:
         stage('Uploading artifacts') {
             steps {
                 echo "uploading..."
-                sh "curl -F "path=@${env.BUILD_DIR}/src/calculator_app" http://192.168.49.1:8081/upload?path=/"
+                sh "curl -F \"path=@${env.BUILD_DIR}/src/calculator_app\" http://192.168.49.1:8081/upload?path=/"
             }
+        }
+        stage('Initialize Integration') {
+          build job: './Jenkinsfile_integration'
         }
     }
 }
