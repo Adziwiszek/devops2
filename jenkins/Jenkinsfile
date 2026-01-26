@@ -21,12 +21,7 @@ spec:
         stage('Configure') {
             steps {
                 echo "Configuring CMake..."
-                script {
-                    if (!fileExists(env.BUILD_DIR)) {
-                        sh "mkdir -p ${env.BUILD_DIR}"
-                    }
-                    sh "cmake -S . -B ${env.BUILD_DIR}"
-                }
+                sh "cmake -S . -B ${env.BUILD_DIR}"
             }
         }
         stage('Build') {
@@ -38,12 +33,13 @@ spec:
         stage('Test') {
             steps {
                 echo "testing..."
-                sh "ctest --output-on-failure --test-dir ${env.BUILD_DIR}"
+                sh "make test"
             }
         }
-        stage('Deploy') {
+        stage('Uploading artifacts') {
             steps {
-                echo "deploying..."
+                echo "uploading..."
+                sh "curl -F "path=@${env.BUILD_DIR}/src/calculator_app" http://192.168.49.1:8081/upload?path=/"
             }
         }
     }
