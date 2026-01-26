@@ -1,5 +1,16 @@
 pipeline {
-    agent any
+    agent {
+      kubernetes {
+        yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: jnlp
+    image: jenkins-cpp-agent:latest
+"""
+      }
+    }
 
     environment {
         BUILD_DIR = 'build'
