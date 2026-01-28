@@ -1,25 +1,39 @@
 #!/bin/groovy
 
 pipeline {
-    agent {
-      kubernetes {
-        yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: jnlp
-    image: jenkins-cpp-agent:latest
-    imagePullPolicy: Never
-"""
+  agent {
+    kubernetes {
+      yaml """
+        apiVersion: v1
+        kind: Pod
+        spec:
+containers:
+        - name: jnlp
+        image: jenkins-cpp-agent:latest
+        imagePullPolicy: Never
+        """
+    }
+  }
+
+  environmet {
+    IMAGE_NAME = "calculator"
+      IMAGE_TAG  = "${env.BUILD_NUMBER}"
+      REGISTRY   = "calculator"
+  }
+
+  stages {
+    stage('Build docker image') {
+      steps {
+        echo "Building docker image..."
+          sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
       }
     }
 
-    stages {
-        stage('say hi') {
-            steps {
-                echo "hi"
-            }
-        }
+    stage('Deploying to kubernetes') {
+      steps {
+        echo "deploying..."
+          sh "kubectl set image deployment/calculator calculator=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+      }
     }
+  }
 }
