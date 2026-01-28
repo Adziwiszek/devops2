@@ -44,7 +44,7 @@ spec:
         }
         stage('Initialize Integration') {
           steps {
-            build job: './Jenkinsfile_integration'
+            build job: 'Jenkinsfile_integration'
           }
         }
     }
