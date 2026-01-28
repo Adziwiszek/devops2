@@ -1,53 +1,51 @@
 pipeline {
-  agent {
-    kubernetes {
-      yaml """
-        apiVersion: v1
-        kind: Pod
-        spec:
-containers:
-        - name: jnlp
-        image: jenkins-cpp-agent:latest
-        imagePullPolicy: Never
-        """
+    agent {
+      kubernetes {
+        yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: jnlp
+    image: jenkins-cpp-agent:latest
+    imagePullPolicy: Never
+"""
+      }
     }
-  }
 
-  environment {
-    BUILD_DIR = 'build'
-  }
+    environment {
+        BUILD_DIR = 'build'
+    }
 
-  stages {
-    stage('Configure') {
-      steps {
-        echo "Configuring CMake..."
-          sh "cmake -S . -B ${env.BUILD_DIR}"
-      }
+    stages {
+        stage('Configure') {
+            steps {
+                echo "Configuring CMake..."
+                sh "cmake -S . -B ${env.BUILD_DIR}"
+            }
+        }
+        stage('Build') {
+            steps {
+                echo "building..."
+                sh "cmake --build build"
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "testing..."
+                sh "make test"
+            }
+        }
+        stage('Uploading artifacts') {
+            steps {
+                echo "uploading..."
+                sh "curl -F \"path=@${env.BUILD_DIR}/src/calculator_app\" http://192.168.49.1:8081/upload?path=/"
+            }
+        }
+        stage('Initialize Integration') {
+          steps {
+            build job: 'integration'
+          }
+        }
     }
-    stage('Build') {
-      steps {
-        echo "building..."
-          sh "cmake --build build"
-      }
-    }
-    stage('Test') {
-      steps {
-        echo "testing..."
-          sh "make test"
-      }
-    }
-    stage('Uploading artifacts') {
-      steps {
-        echo "uploading..."
-          sh "curl -F \"path=@${env.BUILD_DIR}/src/calculator_app\" http://192.168.49.1:8081/upload?path=/"
-      }
-    }
-  }
-  post {
-    success {
-      steps {
-        build job: 'integration'
-      }
-    }
-  }
 }
