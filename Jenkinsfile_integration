@@ -15,10 +15,23 @@ spec:
       }
     }
 
+    environmet {
+        IMAGE_NAME = "calculator"
+        IMAGE_TAG  = "${env.BUILD_NUMBER}"
+        REGISTRY   = "calculator"
+    }
+
     stages {
-        stage('say hi') {
+        stage('Build docker image') {
             steps {
-                echo "hi"
+                echo "Building docker image..."
+                sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+        stage('Deploying to kubernetes') {
+            steps {
+                echo "deploying..."
+                sh "kubectl set image deployment/calculator calculator=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
             }
         }
     }
