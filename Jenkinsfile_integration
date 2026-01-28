@@ -15,7 +15,7 @@ spec:
       }
     }
 
-    environmet {
+    environment {
         IMAGE_NAME = "calculator"
         IMAGE_TAG  = "${env.BUILD_NUMBER}"
         REGISTRY   = "calculator"
