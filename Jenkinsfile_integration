@@ -12,8 +12,9 @@ pipeline {
     stages {
         stage('Build docker image') {
             steps {
-                echo "Building docker image..."
-                sh "docker build -t ${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} ."
+                script {
+                    docker.build("calculator:${env.IMAGE_TAG}")
+                }
             }
         }
     }
