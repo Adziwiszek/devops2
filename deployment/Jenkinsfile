@@ -12,9 +12,10 @@ pipeline {
     stages {
         stage('Build docker image') {
             steps {
-                script {
+                echo "docker"
+                /* script {
                     docker.build("calculator:${env.IMAGE_TAG}")
-                }
+                }*/
             }
         }
     }
