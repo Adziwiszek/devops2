@@ -22,6 +22,12 @@ spec:
     }
 
     stages {
+        stage('checking docker version') {
+            steps {
+                sh 'which docker'
+                sh 'docker version'
+            }
+        }
         stage('Build docker image') {
             steps {
                 echo "Building docker image..."

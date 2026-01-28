@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
     cmake \
     g++ \
     make \
+    docker.io \
+    kubectl \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
