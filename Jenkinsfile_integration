@@ -31,7 +31,7 @@ spec:
         stage('Deploying to kubernetes') {
             steps {
                 echo "deploying..."
-                sh "kubectl set image deployment/calculator calculator=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+                sh "kubectl set image deployment/calculator calculator=${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
             }
         }
     }
